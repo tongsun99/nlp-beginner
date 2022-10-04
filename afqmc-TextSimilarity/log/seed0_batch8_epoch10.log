@@ -1,0 +1,67 @@
+09/21/2022 01:36:35 - INFO - root - [utils.py:13] - torch.cuda.is_available True
+09/21/2022 01:36:35 - INFO - root - [train.py:133] - no_cuda False
+09/21/2022 01:36:35 - INFO - root - [train.py:134] - device: cuda, n_gpu: 1
+09/21/2022 01:36:35 - INFO - root - [utils.py:29] - Set random seed to 0
+09/21/2022 01:36:46 - INFO - root - [utils.py:33] - ***** Setting up tokenizer *****
+
+09/21/2022 01:36:46 - INFO - root - [utils.py:42] - Loading bert-base-chinese tokenizer
+09/21/2022 01:47:05 - INFO - root - [train.py:118] - global loss at epoch 1: 0.5511275581730823
+09/21/2022 01:47:05 - INFO - root - [train.py:119] - Start Evaluation at epoch 1
+09/21/2022 01:49:27 - INFO - root - [train.py:124] - train loss: 0.44453143309593507
+09/21/2022 01:49:27 - INFO - root - [train.py:125] - train acc: 0.7782081961631775
+09/21/2022 01:49:27 - INFO - root - [train.py:126] - dev loss: 0.5101692190186845
+09/21/2022 01:49:27 - INFO - root - [train.py:127] - dev acc: 0.7261353135108948
+09/21/2022 01:59:30 - INFO - root - [train.py:118] - global loss at epoch 2: 0.461537057920103
+09/21/2022 01:59:30 - INFO - root - [train.py:119] - Start Evaluation at epoch 2
+09/21/2022 02:01:52 - INFO - root - [train.py:124] - train loss: 0.3433448945190358
+09/21/2022 02:01:52 - INFO - root - [train.py:125] - train acc: 0.8406535387039185
+09/21/2022 02:01:52 - INFO - root - [train.py:126] - dev loss: 0.5234014791815921
+09/21/2022 02:01:52 - INFO - root - [train.py:127] - dev acc: 0.7282205820083618
+09/21/2022 02:11:52 - INFO - root - [train.py:118] - global loss at epoch 3: 0.37592620796390325
+09/21/2022 02:11:52 - INFO - root - [train.py:119] - Start Evaluation at epoch 3
+09/21/2022 02:14:14 - INFO - root - [train.py:124] - train loss: 0.24281948726261443
+09/21/2022 02:14:14 - INFO - root - [train.py:125] - train acc: 0.9080794453620911
+09/21/2022 02:14:14 - INFO - root - [train.py:126] - dev loss: 0.543913600611052
+09/21/2022 02:14:14 - INFO - root - [train.py:127] - dev acc: 0.73656165599823
+09/21/2022 02:24:12 - INFO - root - [train.py:118] - global loss at epoch 4: 0.2900489762598798
+09/21/2022 02:24:12 - INFO - root - [train.py:119] - Start Evaluation at epoch 4
+09/21/2022 02:26:34 - INFO - root - [train.py:124] - train loss: 0.15161505484727203
+09/21/2022 02:26:34 - INFO - root - [train.py:125] - train acc: 0.9470787048339844
+09/21/2022 02:26:34 - INFO - root - [train.py:126] - dev loss: 0.6424420988359661
+09/21/2022 02:26:34 - INFO - root - [train.py:127] - dev acc: 0.7356348633766174
+09/21/2022 02:36:31 - INFO - root - [train.py:118] - global loss at epoch 5: 0.21232303636058414
+09/21/2022 02:36:31 - INFO - root - [train.py:119] - Start Evaluation at epoch 5
+09/21/2022 02:38:53 - INFO - root - [train.py:124] - train loss: 0.09880527922404515
+09/21/2022 02:38:53 - INFO - root - [train.py:125] - train acc: 0.9659812450408936
+09/21/2022 02:38:53 - INFO - root - [train.py:126] - dev loss: 0.7246719871238047
+09/21/2022 02:38:53 - INFO - root - [train.py:127] - dev acc: 0.7335495948791504
+09/21/2022 02:48:50 - INFO - root - [train.py:118] - global loss at epoch 6: 0.15777993481701177
+09/21/2022 02:48:50 - INFO - root - [train.py:119] - Start Evaluation at epoch 6
+09/21/2022 02:51:13 - INFO - root - [train.py:124] - train loss: 0.05691737573381638
+09/21/2022 02:51:13 - INFO - root - [train.py:125] - train acc: 0.9836605191230774
+09/21/2022 02:51:13 - INFO - root - [train.py:126] - dev loss: 0.8561808503073364
+09/21/2022 02:51:13 - INFO - root - [train.py:127] - dev acc: 0.7347080707550049
+09/21/2022 03:01:11 - INFO - root - [train.py:118] - global loss at epoch 7: 0.12010559551099936
+09/21/2022 03:01:11 - INFO - root - [train.py:119] - Start Evaluation at epoch 7
+09/21/2022 03:03:33 - INFO - root - [train.py:124] - train loss: 0.03535822917087106
+09/21/2022 03:03:33 - INFO - root - [train.py:125] - train acc: 0.9904758930206299
+09/21/2022 03:03:33 - INFO - root - [train.py:126] - dev loss: 0.955264917363874
+09/21/2022 03:03:33 - INFO - root - [train.py:127] - dev acc: 0.7282205820083618
+09/21/2022 03:13:29 - INFO - root - [train.py:118] - global loss at epoch 8: 0.08710828004649017
+09/21/2022 03:13:29 - INFO - root - [train.py:119] - Start Evaluation at epoch 8
+09/21/2022 03:15:51 - INFO - root - [train.py:124] - train loss: 0.023072403066678814
+09/21/2022 03:15:51 - INFO - root - [train.py:125] - train acc: 0.9939418435096741
+09/21/2022 03:15:51 - INFO - root - [train.py:126] - dev loss: 1.0770013170623483
+09/21/2022 03:15:51 - INFO - root - [train.py:127] - dev acc: 0.7351714372634888
+09/21/2022 03:25:46 - INFO - root - [train.py:118] - global loss at epoch 9: 0.06800128375742343
+09/21/2022 03:25:46 - INFO - root - [train.py:119] - Start Evaluation at epoch 9
+09/21/2022 03:28:08 - INFO - root - [train.py:124] - train loss: 0.014012970645265197
+09/21/2022 03:28:08 - INFO - root - [train.py:125] - train acc: 0.9967087507247925
+09/21/2022 03:28:08 - INFO - root - [train.py:126] - dev loss: 1.1729138805838712
+09/21/2022 03:28:08 - INFO - root - [train.py:127] - dev acc: 0.7316960096359253
+09/21/2022 03:38:03 - INFO - root - [train.py:118] - global loss at epoch 10: 0.052494886526178564
+09/21/2022 03:38:03 - INFO - root - [train.py:119] - Start Evaluation at epoch 10
+09/21/2022 03:40:25 - INFO - root - [train.py:124] - train loss: 0.011803743746599815
+09/21/2022 03:40:25 - INFO - root - [train.py:125] - train acc: 0.9973786473274231
+09/21/2022 03:40:25 - INFO - root - [train.py:126] - dev loss: 1.2297646020912065
+09/21/2022 03:40:25 - INFO - root - [train.py:127] - dev acc: 0.7328544855117798

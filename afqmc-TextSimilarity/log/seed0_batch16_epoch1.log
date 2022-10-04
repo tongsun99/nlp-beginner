@@ -1,0 +1,13 @@
+09/24/2022 16:11:27 - INFO - root - [utils.py:13] - torch.cuda.is_available True
+09/24/2022 16:11:27 - INFO - root - [train.py:167] - no_cuda False
+09/24/2022 16:11:27 - INFO - root - [train.py:168] - device: cuda, n_gpu: 1
+09/24/2022 16:11:27 - INFO - root - [utils.py:29] - Set random seed to 0
+09/24/2022 16:11:38 - INFO - root - [utils.py:33] - ***** Setting up tokenizer *****
+
+09/24/2022 16:11:38 - INFO - root - [utils.py:42] - Loading bert-base-chinese tokenizer
+09/24/2022 16:19:18 - INFO - root - [train.py:148] - global loss at epoch 1: 0.5497112590941112
+09/24/2022 16:19:18 - INFO - root - [train.py:149] - Start Evaluation at epoch 1
+09/24/2022 16:19:31 - INFO - root - [train.py:155] - new best, dev_acc=0.7196478247642517 > best_dev_acc=0.0
+09/24/2022 16:19:31 - INFO - root - [train.py:157] - saving new weights...
+09/24/2022 16:19:32 - INFO - root - [train.py:160] - dev loss: 0.5089475659860505
+09/24/2022 16:19:32 - INFO - root - [train.py:161] - dev acc: 0.7196478247642517
