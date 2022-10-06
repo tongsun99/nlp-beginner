@@ -6,10 +6,10 @@ from torch.utils.data import Dataset
 
 
 class AFQMCDataset(Dataset):
-    """AFQMC train set and dev set
+    """AFQMC train set, dev set
 
-    AFQMC' dataset download https://storage.googleapis.com/cluebenchmark/tasks/afqmc_public.zip
-    submit examples download https://storage.googleapis.com/cluebenchmark/tasks/clue_submit_examples.zip
+    AFQMC' dataset https://storage.googleapis.com/cluebenchmark/tasks/afqmc_public.zip
+    submit examples https://storage.googleapis.com/cluebenchmark/tasks/clue_submit_examples.zip
     """
 
     def __init__(self, filename, tokenizer):
@@ -36,7 +36,7 @@ class AFQMCDataset(Dataset):
 class AFQMCDatasetNOLABEL(Dataset):
     """AFQMC test set
     
-    no labels, you should submit your answer to https://www.cluebenchmarks.com/submit.html
+    无标签, 提交至 https://www.cluebenchmarks.com/submit.html
     """
 
     def __init__(self, filename, tokenizer):

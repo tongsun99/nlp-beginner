@@ -6,13 +6,15 @@ from transformers import AutoModel
 
 
 class SemanticSimilarityNet(nn.Module):
-    """Bert base model for semantic similarity classification.
-    
-    Inputs: Two sentences
-    Output: Are they similar
+    """bert-baseline
+
+    bert编码句子对, 用[CLS]直接分类
     """
 
     def __init__(self, model_name):
+        """
+        :param str model_name: 预训练语言模型
+        """
         super(SemanticSimilarityNet, self).__init__()
         self.bert_encoder = AutoModel.from_pretrained(model_name)
         self.classifier = nn.Linear(768, 2)

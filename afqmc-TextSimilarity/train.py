@@ -49,7 +49,7 @@ def _get_validated_args(input_args: Optional[List[str]] = None):
 
 def evaluate(model, dataloader, device):
     model.eval()
-    # predicted logits & labels in whole dataloader
+    # dataloader中所有预测标签
     all_logits = []; all_labels = []
     global_loss = 0.0
     with torch.no_grad():
@@ -67,13 +67,11 @@ def evaluate(model, dataloader, device):
             loss = loss_fn(output_logits, batch_labels)
             global_loss += loss.item()
 
-            # add labels & logits in a batch, to labels & logits in whole dataloader
             all_logits.append(output_logits)
             all_labels.append(batch_labels)
 
         all_logits = torch.cat(all_logits, dim=0)
         all_labels = torch.cat(all_labels, dim=0)
-
         predicted_logits, predicted_labels = torch.max(all_logits, dim=1)
         acc = float(((all_labels == predicted_labels).sum() / all_labels.shape[0]))
         return global_loss / len(dataloader), acc
@@ -81,7 +79,7 @@ def evaluate(model, dataloader, device):
 
 def test(args, model, dataloader, device, tokenizer):
     model.eval()
-    # predicted logits & labels in whole dataloader
+    # dataloader中所有预测标签
     all_logits = []; all_labels = []
     with torch.no_grad():
         for batch in tqdm(dataloader, total=len(dataloader)):
@@ -93,11 +91,9 @@ def test(args, model, dataloader, device, tokenizer):
 
             output_logits = model(batch_input_ids, batch_attention_mask, batch_token_type_ids)
 
-            # add labels & logits in a batch, to labels & logits in whole dataloader
             all_logits.append(output_logits)
 
         all_logits = torch.cat(all_logits, dim=0)
-
         predicted_logits, predicted_labels = torch.max(all_logits, dim=1)
         return predicted_labels
 
@@ -141,7 +137,6 @@ def train(args, model, trainDataLoader, devDataLoader, testDataLoader, device):
         logging.info(f'global loss at epoch {epoch}: {global_loss / len(trainDataLoader)}')
         logging.info(f'Start Evaluation at epoch {epoch}')
 
-        # train_loss, train_acc = evaluate(model, trainDataLoader, device)
         dev_loss, dev_acc = evaluate(model, devDataLoader, device)
         logging.info(f'dev loss: {dev_loss}')
         logging.info(f'dev acc: {dev_acc}')
@@ -149,7 +144,6 @@ def train(args, model, trainDataLoader, devDataLoader, testDataLoader, device):
         if dev_acc > best_dev_acc:
             logging.info(f"new best, dev_acc={dev_acc} > best_dev_acc={best_dev_acc}")
             best_dev_acc = dev_acc
-
             logging.info("saving new weights...")
             torch.save(model.state_dict(), f"epoch_{epoch}_dev_acc_{(100 * dev_acc):.4f}_model_weights.bin")
 
@@ -176,17 +170,6 @@ def main(input_args: Optional[List[str]] = None):
     devDataLoader = DataLoader(devDataSet, batch_size=args.batch_size, shuffle=False)
     testDataLoader = DataLoader(testDataSet, batch_size=1, shuffle=False)
 
-    # testDataLoader = DataLoader(testDataSet, sampler=SequentialSampler(range(100)), batch_size=1, shuffle=False)
-    # batch_input_ids, batch_attention_mask, batch_token_type_ids, batch_labels = next(iter(trainDataLoader))
-    # # torch.size([4, 157]), torch.size([4])
-    # logging.debug(f'batch_input_ids shape {batch_input_ids.shape}')
-    # logging.debug(f'batch_attention_mask shape {batch_attention_mask.shape}')
-    # logging.debug(f'batch_token_type_ids {batch_token_type_ids.shape}')
-    # logging.debug(f'batch_labels shape {batch_labels.shape}')
-    # # test input and model output here...
-    # model_output = model(batch_input_ids, batch_attention_mask, batch_token_type_ids)
-    # logging.debug(f'model_output shape {model_output.shape}')
-
     if args.do_train:
         train(args, model, trainDataLoader, devDataLoader, testDataLoader, device)
 
@@ -199,7 +182,6 @@ def main(input_args: Optional[List[str]] = None):
 
         predicted_labels = test(args, model, testDataLoader, device, tokenizer)
         predicted_labels = list(map(int, predicted_labels.cpu()))
-        # logging.debug(predicted_labels)
 
         for id, label in enumerate(predicted_labels):
             with open("test.json", 'a') as f:
