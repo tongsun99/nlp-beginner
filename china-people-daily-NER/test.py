@@ -19,10 +19,16 @@ class ChinaPeopleDailyNER(Dataset):
     def __init__(self, tokenizer, filename):
         sents, labels = self.read_data(filename)
         encoding, token_labels = self.tokenize_data(sents, labels, tokenizer)
-        
         labels = torch.tensor(token_labels)
+        self.encoding, self.labels = encoding, labels
         logging.debug(encoding["input_ids"].shape)
         logging.debug(labels.shape)
+
+        # # check out
+        # id = 0
+        # logging.debug(encoding.tokens(id))
+        # logging.debug(encoding["input_ids"][id])
+        # logging.debug([id2label[tag] for tag in labels[id].tolist()])
         
         
     def read_data(self, filename):
@@ -61,13 +67,19 @@ class ChinaPeopleDailyNER(Dataset):
         return sents, labels 
     
     def tokenize_data(self, sents, labels, tokenizer):
-        # TODO write doc
         """preprocess data, from char-level to token_level
 
-        :param _type_ sents: _description_
-        :param _type_ labels: _description_
-        :param _type_ tokenizer: _description_
-        :return _type_: _description_
+        :param sents: e.g. ["厦门海钓在福建", "中国警察"] 
+        :param labels: e.g. [
+                                [(0, 2, "LOC", "厦门"), (5, 7, "LOC", "福建")]
+                                [(0, 2, "LOC", "中国")]  
+                            ]
+        :param tokenizer: 
+        :return enocding:
+        :return token_labels: e.g [[0, 2, 3, ..., 2, 3, ...],
+                                   [0, 2, 3, 0, 0, ...]]
+                             2-"B-LOC"; 3-"I-LOC"
+                             每个元素对应一个token, 例如: 1999在char-level中对应4个元素, 在token-level对应一个元素
         """
         # TODO maybe return_offsets_mapping can help
         encoding = tokenizer(sents, padding=True, truncation=True, return_tensors="pt")
@@ -80,19 +92,37 @@ class ChinaPeopleDailyNER(Dataset):
                 token_st = encoding.char_to_token(i, st)
                 token_ed = encoding.char_to_token(i, ed - 1)
                 token_tags[token_st] = label2id[f"B-{tag}"]
-                if token_ed > token_st + 1:
+                if token_ed >= token_st + 1:
                     token_tags[token_st + 1 : token_ed + 1] =  [label2id[f"I-{tag}"]] * (token_ed - token_st)
             token_labels.append(token_tags)
         return encoding, token_labels
          
     def __getitem__(self, idx):
-        pass
+        return (
+            {
+                "input_ids": self.encoding["input_ids"][idx],
+                "token_type_ids": self.encoding["token_type_ids"][idx],
+                "attention_mask": self.encoding["attention_mask"][idx]
+            },
+            self.labels[idx]
+        )
 
     def __len__(self):
-        pass
+        return self.labels.shape[0]
 
 tokenizer = AutoTokenizer.from_pretrained("bert-base-chinese")
 demo_dataset = ChinaPeopleDailyNER(tokenizer, "data/china-people-daily-ner-corpus/example.demo")
 train_dataset = ChinaPeopleDailyNER(tokenizer, "data/china-people-daily-ner-corpus/example.train")
 dev_dataset = ChinaPeopleDailyNER(tokenizer, "data/china-people-daily-ner-corpus/example.dev")
 test_dataset = ChinaPeopleDailyNER(tokenizer, "data/china-people-daily-ner-corpus/example.test")
+# In[3]
+from torch.utils.data.dataloader import DataLoader
+demo_dataloader = DataLoader(demo_dataset, batch_size=4, shuffle=False)
+train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True)
+dev_dataloader = DataLoader(dev_dataset, batch_size=4, shuffle=False)
+test_dataloader = DataLoader(test_dataset, batch_size=4, shuffle=False)
+
+batch_x, batch_y = next(iter(demo_dataloader))
+
+logging.debug(batch_x)
+logging.debug(batch_y)
