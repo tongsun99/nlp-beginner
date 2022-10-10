@@ -1,0 +1,8 @@
+10/10/2022 16:14:49 - INFO - root - [utils.py:13] - torch.cuda.is_available False
+10/10/2022 16:14:49 - INFO - root - [train.py:129] - no_cuda True
+10/10/2022 16:14:49 - INFO - root - [train.py:130] - device: cpu, n_gpu: 0
+10/10/2022 16:14:49 - INFO - root - [utils.py:29] - Set random seed to 0
+10/10/2022 16:14:53 - INFO - root - [utils.py:33] - ***** Setting up tokenizer *****
+
+10/10/2022 16:14:53 - INFO - root - [utils.py:42] - Loading bert-base-chinese tokenizer
+10/10/2022 16:15:08 - INFO - root - [train.py:161] - Loading random weights...

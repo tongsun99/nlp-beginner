@@ -1,5 +1,5 @@
-# In[1]
-# import
+# In[1] 
+# 1. import
 import logging
 import torch
 
@@ -9,8 +9,8 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s - [%(filename
                     level=logging.DEBUG,
                     )
 
-# In[2]
-# dataset
+# In[2] 
+# 2. dataset
 from torch.utils.data.dataset import Dataset
 
 id2label = {0: 'O', 1: 'B-LOC', 2: 'I-LOC', 3: 'B-ORG', 4: 'I-ORG', 5: 'B-PER', 6: 'I-PER'}
@@ -73,8 +73,9 @@ class ChinaPeopleDailyNER(Dataset):
                                 [(0, 2, "LOC", "中国")]  
                             ]
         :param tokenizer: 
-        :return enocding:
-        :return token_labels: e.g [[-100, 2, 3, ..., 2, 3, ...],
+        :return encoding: e.g. [[CLS, 厦, 门, ..., [SEP], [PAD], ...],
+                                [CLS, 中, 国, 警, 察, [SEP], [PAD], ...]] 
+        :return token_labels: e.g. [[-100, 2, 3, ..., 2, 3, ...],
                                    [-100, 2, 3, 0, 0, ...]]
                              2-"B-LOC"; 3-"I-LOC"
                              每个元素对应一个token, 例如: 1999在char-level中对应4个元素, 在token-level对应一个元素
@@ -121,7 +122,7 @@ train_dataset = ChinaPeopleDailyNER(tokenizer, "data/china-people-daily-ner-corp
 dev_dataset = ChinaPeopleDailyNER(tokenizer, "data/china-people-daily-ner-corpus/example.dev")
 test_dataset = ChinaPeopleDailyNER(tokenizer, "data/china-people-daily-ner-corpus/example.test")
 # In[3]
-# dataloader
+# 3. dataloader
 from torch.utils.data.dataloader import DataLoader
 demo_dataloader = DataLoader(demo_dataset, batch_size=1, shuffle=False)
 train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True)
@@ -131,19 +132,23 @@ test_dataloader = DataLoader(test_dataset, batch_size=4, shuffle=False)
 # test
 batch_x, batch_y = next(iter(demo_dataloader))
 # In[4]
-# Define model
+# 4. Define model
 from torch import nn
 from transformers import BertPreTrainedModel, BertModel, AutoConfig
 
 class BertForNER(BertPreTrainedModel):
     def __init__(self, config):
+        """继承BertPreTrainedModel, 利用config初始化
+
+        :param config: 
+        """
         super().__init__(config)
         self.bert = BertModel(config)
         self.classifier = nn.Linear(config.hidden_size, config.num_labels)
         self.init_weights()
     
     def forward(self, x):
-        """BertForNer
+        """
 
         :param input_ids: [batch_size, seq_len]
         :return logits: [batch_size, seq_len, config.num_labels]
@@ -167,19 +172,19 @@ for i in range(1):
     logging.info(f"logits {i}: {logits[i]}")        
 
 # In[5]:
-# Loss function
+# 5. Loss function
 loss_fn = nn.CrossEntropyLoss(ignore_index=-100)
 logging.info(loss_fn(logits.permute(0, 2, 1), batch_y))
 # In[6]:
-# Predict labels
-predicted_logits, predicted_labels = torch.max(logits, dim=2)
+# 6. Predict labels
+pred_logits, pred_labels = torch.max(logits, dim=2)
 logging.debug(logits)
-logging.debug(predicted_logits)
-logging.debug(predicted_labels)
+logging.debug(pred_logits)
+logging.debug(pred_labels)
 logging.debug(batch_y.shape)
-logging.debug(predicted_labels.shape)
+logging.debug(pred_labels.shape)
 # In[7]:
-# about seqeval
+# 7. about seqeval
 from seqeval.metrics import classification_report
 from seqeval.scheme import IOB2
 
@@ -187,24 +192,30 @@ y_true = [['O', 'O', 'O', 'B-LOC', 'I-LOC', 'I-LOC', 'B-LOC', 'O'], ['B-PER', 'I
 y_pred = [['O', 'O', 'B-LOC', 'I-LOC', 'I-LOC', 'I-LOC', 'B-LOC', 'O'], ['B-PER', 'I-PER', 'O']]
 
 print(classification_report(y_true, y_pred, mode='strict', scheme=IOB2))
+
 # In[8]:
-def compare(pred_labels, true_labels):
+# 8. inference
+def remove_special_tokens(pred_labels, true_labels):
     """use seqeval predicted
+    e.g. tokens = [CLS, 厦, 门, [SEP], [PAD], ...]
+        pred_labels = [0, 1, 2, 0, 0, ...]
+        true_labels = [-100, 1, 2, -100, ...]
+        pred_labels_nospec: [1, 2]
+        true_labels_nospec: [1, 2]
 
     :param pred_labels: [batch_size, seq_len]
     :param true_labels: [batch_size, seq_len]
-    :param input_ids: [batch_size, seq_len]
-    :return pred_labels_seq: [batch_size, seq_len]
-    :return true_labels_seq: [batch_size, seq_len]
+    :return pred_labels_nospec: [batch_size, seq_len(w/o special tokens)]
+    :return true_labels_nospec: [batch_size, seq_len(w/o special tokens)]
     """    
-    true_labels_seq = [[id2label[tag] for tag in true_label if tag != -100 ] for true_label in true_labels.tolist()]
-    pred_labels_seq = [[id2label[pred_tag] for true_tag, pred_tag in zip(true_label, pred_label) if true_tag != -100] for true_label, pred_label in zip(true_labels.tolist(), pred_labels.tolist())]
-    return pred_labels_seq, true_labels_seq
+    true_labels_nospec = [[id2label[tag] for tag in true_label if tag != -100 ] for true_label in true_labels.tolist()]
+    pred_labels_nospec = [[id2label[pred_tag] for true_tag, pred_tag in zip(true_label, pred_label) if true_tag != -100] for true_label, pred_label in zip(true_labels.tolist(), pred_labels.tolist())]
+    return pred_labels_nospec, true_labels_nospec
 
 # test
-pred_labels_seq, true_labels_seq = compare(predicted_labels, batch_y)
-logging.debug(f"pred_labels_seq: {pred_labels_seq}, true_lables_seq: {true_lables_seq}")
-logging.debug(len(pred_labels_seq[0]))
-logging.debug(len(true_labels_seq[0]))
-print(classification_report(true_labels_seq, pred_labels_seq,
+pred_labels_nospec, true_labels_nospec = remove_special_tokens(pred_labels, batch_y)
+logging.debug(f"pred_labels_seq: {pred_labels_nospec}, true_lables_seq: {true_labels_nospec}")
+logging.debug(len(pred_labels_nospec[0]))
+logging.debug(len(true_labels_nospec[0]))
+print(classification_report(true_labels_nospec, pred_labels_nospec,
                           mode="strict", scheme=IOB2))
